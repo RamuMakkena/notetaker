@@ -1,6 +1,5 @@
 // Import express package
 const express = require('express');
-const notes = require('./db/db.json');
 var path = require('path');
 const fs = require('fs');
 const PORT = 3001;
@@ -26,7 +25,14 @@ app.get('/notes', (req, res) => {
 
 app.get('/api/notes', (req, res) => {
     console.log('we are getting all  notes');
-    res.json(notes);
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+      } else {
+         res.send(data);
+      }
+    });
+
 });
 
 app.post('/api/notes', (req, res) => {
@@ -42,14 +48,12 @@ app.post('/api/notes', (req, res) => {
       } else {
         // Convert string into JSON object
         const allNotes = JSON.parse(data);
-
         // Add a new review
         allNotes.push(newNote);
-
         // Write updated reviews back to the file
-        fs.writeFile(
+        fs.writeFileSync(
           './db/db.json',
-          JSON.stringify(allNotes, null, 4),
+          JSON.stringify(allNotes),
           (writeErr) =>
             writeErr
               ? console.error(writeErr)
@@ -57,8 +61,11 @@ app.post('/api/notes', (req, res) => {
         );
       }
     });
-
-    res.json(newNote);
+    const response = {
+      status: 'success',
+      body: newNote,
+    };
+    res.json(response);
 });
 
 

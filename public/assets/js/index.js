@@ -67,12 +67,10 @@ const renderActiveNote = () => {
 };
 
 const handleNoteSave = () => {
-  console.log('handling save button');
   const newNote = {
     title: noteTitle.value,
     text: noteText.value,
   };
-  console.log('we are about to save it');
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
@@ -120,15 +118,12 @@ const handleRenderSaveBtn = () => {
 
 // Render the list of note titles
 const renderNoteList = async (notes) => {
-  console.log('we are here to refresh the notes');
   let jsonNotes = await notes.json();
-  console.log('window path is : '+window.location.pathname)
   if (window.location.pathname === '/notes') {
-    console.log("We are here in notes to nollify all notes at ");
     noteList.forEach((el) => (el.innerHTML = ''));
   }
 
-  console.log('empty notes list');
+
   let noteListItems = [];
 
   // Returns HTML element with or without a delete button
@@ -163,9 +158,7 @@ const renderNoteList = async (notes) => {
   if (jsonNotes.length === 0) {
     noteListItems.push(createLi('No saved Notes', false));
   }
-  console.log('++'+typeof jsonNotes);
-  console.log(jsonNotes);
-  console.log('length of json : '+jsonNotes.length);
+
   jsonNotes.forEach((note) => {
     const li = createLi(note.title);
     li.dataset.note = JSON.stringify(note);
